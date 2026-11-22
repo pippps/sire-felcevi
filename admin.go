@@ -11,8 +11,8 @@ func (cfg *apiConfig) resetHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := cfg.dbQueries.DeleteUsers(r.Context()); err != nil {
-		respondWithError(w, 400, "error deleting users", err)
-		
+		respondWithError(w, 500, "error deleting users", err)
+		return
 	}
 	w.Write([]byte("OK"))
 }

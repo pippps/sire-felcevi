@@ -11,6 +11,16 @@ import (
 	"github.com/google/uuid"
 )
 
+type ImagesMd struct {
+	ID          uuid.UUID
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	Title       sql.NullString
+	ImageUrl    string
+	Description sql.NullString
+	UserID      uuid.UUID
+}
+
 type RefreshToken struct {
 	Token     string
 	CreatedAt time.Time

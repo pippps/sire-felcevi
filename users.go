@@ -16,12 +16,12 @@ type UserReq struct {
 }
 
 type UserResp struct {
-	ID           uuid.UUID
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	Username        string
-	Token        string
-	RefreshToken string
+	ID           uuid.UUID `json:"id"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
+	Username     string    `json:"username"`
+	Token        string    `json:"token,omitempty"`
+	RefreshToken string    `json:"refresh_token,omitempty"`
 }
 
 func (cfg *apiConfig) usersHandler(w http.ResponseWriter,r *http.Request) {
@@ -47,7 +47,12 @@ func (cfg *apiConfig) usersHandler(w http.ResponseWriter,r *http.Request) {
 		respondWithError(w, 400, "Something went wrong", err)
 		return
 	}
-	respondWithJSON(w, 200, user)
+	respondWithJSON(w, 200, UserResp{
+		ID:        user.ID,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+		Username:  user.Username,
+	})
 }
 
 func (cfg *apiConfig) loginHandler(w http.ResponseWriter, r *http.Request) {
@@ -70,9 +75,9 @@ func (cfg *apiConfig) loginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := auth.MakeJWT(dbUser.ID, cfg.secret, time.Hour)
+	token, err := auth.MakeJWT(dbUser.ID, cfg.jwtSecret, time.Hour)
 	if err != nil {
-		respondWithError(w, 402, "Something went wrong", err)
+		respondWithError(w, http.StatusInternalServerError, "Something went wrong", err)
 		return
 	}
 
@@ -84,7 +89,7 @@ func (cfg *apiConfig) loginHandler(w http.ResponseWriter, r *http.Request) {
 		ExpiresAt: time.Now().Add(60 * 24 * time.Hour),
 	})
 	if err != nil {
-		respondWithError(w, 402, "Something went wrong", err)
+		respondWithError(w, http.StatusInternalServerError, "Something went wrong", err)
 		return
 	}
 

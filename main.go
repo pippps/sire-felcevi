@@ -14,7 +14,7 @@ import (
 type apiConfig struct {
 	dbQueries      *database.Queries
 	platform       string
-	secret         string
+	jwtSecret         string
 }
 
 func main() {
@@ -32,7 +32,7 @@ func main() {
 	apiCfg := &apiConfig{
 		dbQueries: database.New(db),
 		platform:  os.Getenv("PLATFORM"),
-		secret:    os.Getenv("SECRET"),
+		jwtSecret:    os.Getenv("SECRET"),
 	}
 
 	srv := &http.Server{
@@ -42,7 +42,9 @@ func main() {
 
 	mux.HandleFunc("POST /api/users", apiCfg.usersHandler)
 	mux.HandleFunc("POST /api/login", apiCfg.loginHandler)
-	mux.HandleFunc("DEL /admin/reset", apiCfg.resetHandler)
+	mux.HandleFunc("POST /api/images", apiCfg.imageMetaCreateHandler)
+	mux.HandleFunc("DELETE /api/images/{imageID}", apiCfg.imageMetaDeleteHandler)
+	mux.HandleFunc("DELETE /admin/reset", apiCfg.resetHandler)
 
 	
 	log.Printf("Serving on port: %s\n", port)

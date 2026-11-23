@@ -78,11 +78,12 @@ func (cfg *apiConfig) createFileHandler(w http.ResponseWriter, r *http.Request, 
 
 	file, err := cfg.dbQueries.Createfile(r.Context(), database.CreatefileParams{
 		ContentType: params.ContentType,
-			Name:        params.Name,
-			Size:        params.Size,
+		Name:        params.Name,
+		Size:        params.Size,
+		UserID:      userID,
 	})
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "Couldn't create image meta data", err)
+		respondWithError(w, http.StatusInternalServerError, "Couldn't create file", err)
 		return
 	}
 
@@ -90,7 +91,7 @@ func (cfg *apiConfig) createFileHandler(w http.ResponseWriter, r *http.Request, 
 }
 
 func (cfg *apiConfig) deleteFileHandler(w http.ResponseWriter, r *http.Request, userID uuid.UUID) {
-	fileIDString := r.PathValue("imageID")
+	fileIDString := r.PathValue("fileID")
 	fileID, err := uuid.Parse(fileIDString)
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid ID", err)
@@ -117,7 +118,6 @@ func (cfg *apiConfig) deleteFileHandler(w http.ResponseWriter, r *http.Request, 
 }
 
 func (cfg *apiConfig) getFilesHandler(w http.ResponseWriter, r *http.Request, userID uuid.UUID) {
-	var filesResp []fileResp
 
 	files, err := cfg.dbQueries.GetFiles(r.Context(), userID)
 	if err != nil {
@@ -126,14 +126,15 @@ func (cfg *apiConfig) getFilesHandler(w http.ResponseWriter, r *http.Request, us
 	}
 
 	if len(files) == 0 {
-		respondWithJSON(w, http.StatusOK, toFileResp(files[0]))
+		respondWithJSON(w, http.StatusOK, files)
 		return
 	}
-	for i,_ := range files {
+
+	filesResp := make([]fileResp, len(files))
+
+	for i, _ := range files {
 		filesResp[i] = toFileResp(files[i])
 	}
 
 	respondWithJSON(w, http.StatusOK, filesResp)
 }
-
-

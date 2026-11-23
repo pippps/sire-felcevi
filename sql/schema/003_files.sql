@@ -1,11 +1,12 @@
 -- +goose Up
-CREATE TABLE images_md(
-    id UUID PRIMARY KEY NOT NULL, 
+CREATE TABLE files(
+    id UUID PRIMARY KEY UNIQUE NOT NULL, 
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
-    title TEXT,
-    image_url TEXT NOT NULL,
-    description TEXT,
+    name TEXT NOT NULL,
+    content_type TEXT NOT NULL,
+    size BIGINT NOT NULL,
+    etag TEXT NOT NULL,
     user_id UUID NOT NULL,
     constraint fk_user_id
 	FOREIGN KEY(user_id) 
@@ -14,4 +15,4 @@ CREATE TABLE images_md(
     );
 
 -- +goose Down
-DROP TABLE images_md;
+DROP TABLE files;

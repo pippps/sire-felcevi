@@ -11,13 +11,14 @@ import (
 	"github.com/google/uuid"
 )
 
-type ImagesMd struct {
+type File struct {
 	ID          uuid.UUID
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
-	Title       sql.NullString
-	ImageUrl    string
-	Description sql.NullString
+	Name        string
+	ContentType string
+	Size        int64
+	Etag        string
 	UserID      uuid.UUID
 }
 

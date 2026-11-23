@@ -42,9 +42,9 @@ func main() {
 
 	mux.HandleFunc("POST /api/users", apiCfg.usersHandler)
 	mux.HandleFunc("POST /api/login", apiCfg.loginHandler)
-	mux.HandleFunc("POST /api/images", apiCfg.tokenValidationMiddleware(apiCfg.createFileHandler))
-	mux.HandleFunc("DELETE /api/images/{imageID}", apiCfg.tokenValidationMiddleware(apiCfg.deleteFileHandler))
-	mux.HandleFunc("GET    /api/images", apiCfg.tokenValidationMiddleware(apiCfg.getFilesHandler))
+	mux.HandleFunc("POST /api/files", apiCfg.tokenValidationMiddleware(apiCfg.createFileHandler))
+	mux.HandleFunc("DELETE /api/files/{fileID}", apiCfg.tokenValidationMiddleware(apiCfg.deleteFileHandler))
+	mux.HandleFunc("GET    /api/files", apiCfg.tokenValidationMiddleware(apiCfg.getFilesHandler))
 	mux.HandleFunc("DELETE /admin/reset", apiCfg.resetHandler)
 
 	log.Printf("Serving on port: %s\n", port)

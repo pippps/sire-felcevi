@@ -45,6 +45,8 @@ func main() {
 	mux.HandleFunc("POST /api/files", apiCfg.tokenValidationMiddleware(apiCfg.createFileHandler))
 	mux.HandleFunc("DELETE /api/files/{fileID}", apiCfg.tokenValidationMiddleware(apiCfg.deleteFileHandler))
 	mux.HandleFunc("GET    /api/files", apiCfg.tokenValidationMiddleware(apiCfg.getFilesHandler))
+	mux.HandleFunc("GET    /api/files/{fileID}", apiCfg.tokenValidationMiddleware(apiCfg.getFileHandler))
+
 	mux.HandleFunc("DELETE /admin/reset", apiCfg.resetHandler)
 
 	log.Printf("Serving on port: %s\n", port)

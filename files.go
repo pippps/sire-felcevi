@@ -138,3 +138,24 @@ func (cfg *apiConfig) getFilesHandler(w http.ResponseWriter, r *http.Request, us
 
 	respondWithJSON(w, http.StatusOK, filesResp)
 }
+
+func (cfg *apiConfig) getFileHandler(w http.ResponseWriter, r *http.Request, userID uuid.UUID){
+	fileIDString := r.PathValue("fileID")
+	fileID, err := uuid.Parse(fileIDString)
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid ID", err)
+		return
+	}
+
+	file, err := cfg.dbQueries.GetFile(r.Context(), fileID)
+	if err != nil {
+		respondWithError(w, http.StatusNotFound, "Couldn't get file", err)
+		return
+	}
+	if file.UserID != userID {
+		respondWithError(w, http.StatusForbidden, "no authorization for this file", err)
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, toFileResp(file))
+}

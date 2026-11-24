@@ -100,17 +100,17 @@ func (cfg *apiConfig) deleteFileHandler(w http.ResponseWriter, r *http.Request, 
 
 	file, err := cfg.dbQueries.GetFile(r.Context(), fileID)
 	if err != nil {
-		respondWithError(w, http.StatusNotFound, "Couldn't get image", err)
+		respondWithError(w, http.StatusNotFound, "Couldn't get file", err)
 		return
 	}
 	if file.UserID != userID {
-		respondWithError(w, http.StatusForbidden, "You can't delete image", err)
+		respondWithError(w, http.StatusForbidden, "You can't delete this file", err)
 		return
 	}
 
 	err = cfg.dbQueries.DeleteFile(r.Context(), fileID)
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "Couldn't delete  image", err)
+		respondWithError(w, http.StatusInternalServerError, "Couldn't delete  file", err)
 		return
 	}
 
@@ -121,7 +121,7 @@ func (cfg *apiConfig) getFilesHandler(w http.ResponseWriter, r *http.Request, us
 
 	files, err := cfg.dbQueries.GetFiles(r.Context(), userID)
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "Couldn't retrieve videos", err)
+		respondWithError(w, http.StatusInternalServerError, "Couldn't retrieve files", err)
 		return
 	}
 

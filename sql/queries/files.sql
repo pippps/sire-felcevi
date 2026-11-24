@@ -27,4 +27,3 @@ WHERE id = $1;
 -- name: DeleteFile :exec
 DELETE FROM files
 WHERE id = $1;
-
